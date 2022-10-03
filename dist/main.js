@@ -79,7 +79,7 @@ function run() {
             }
             const repo_name = payload.repository.full_name;
             const repo_url = `https://github.com/${repo_name}`;
-            const branch = ref.split('/')[ref.length - 1];
+            const branch = ref.split('/')[2];
             const branch_url = `${repo_url}/tree/${branch}`;
             const commits_count = payload.commits.length;
             //initialize message
