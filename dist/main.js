@@ -55,6 +55,8 @@ function run() {
             }
             //get payload
             const payload = github.context.payload;
+            //get ref
+            const ref = github.context.ref;
             //get actor
             const actor = github.context.actor;
             //get envs
@@ -77,6 +79,9 @@ function run() {
             }
             const repo_name = payload.repository.full_name;
             const repo_url = `https://github.com/${repo_name}`;
+            const branch = ref.split('/')[ref.length - 1];
+            const branch_url = `${repo_url}/tree/${branch}`;
+            const commits_count = payload.commits.length;
             //initialize message
             let message = null;
             //elaborate event
@@ -103,6 +108,9 @@ function run() {
                     message = mustache.render(commitTemplateContent, {
                         repo_url: repo_url,
                         repo_name: repo_name,
+                        branch: branch,
+                        branch_url: branch_url,
+                        commits_count: commits_count,
                         actor: actor,
                         commits: commits,
                         status: Utils_1.default.default(StatusMessage_1.default[status])
