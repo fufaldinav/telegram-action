@@ -1,7 +1,11 @@
 "use strict";
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
 }) : (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     o[k2] = m[k];
@@ -81,9 +85,6 @@ function run() {
                     Utils_1.default.dump(payload);
                     //get commits
                     let commits = payload.commits.map(commit => ({
-                        repo_url: repo_url,
-                        repo_name: repo_name,
-                        actor: actor,
                         commit_url: `${repo_url}/commit/${commit.id}`,
                         commit_sha: Utils_1.default.value(() => {
                             if (commit.id.length > 7) {
@@ -100,6 +101,9 @@ function run() {
                     //render message
                     let commitTemplateContent = fs.readFileSync(commit_template, 'utf-8');
                     message = mustache.render(commitTemplateContent, {
+                        repo_url: repo_url,
+                        repo_name: repo_name,
+                        actor: actor,
                         commits: commits,
                         status: Utils_1.default.default(StatusMessage_1.default[status])
                     });

@@ -56,14 +56,11 @@ async function run(): Promise<void> {
         //elaborate event
         switch (event) {
             case "push":
-                
+
                 Utils.dump(payload);
-                
+
                 //get commits
                 let commits = payload.commits.map(commit => ({
-                    repo_url: repo_url,
-                    repo_name: repo_name,
-                    actor: actor,
                     commit_url: `${repo_url}/commit/${commit.id}`,
                     commit_sha: Utils.value(() => {
                         if (commit.id.length > 7) {
@@ -83,6 +80,9 @@ async function run(): Promise<void> {
                 //render message
                 let commitTemplateContent = fs.readFileSync(commit_template, 'utf-8');
                 message = mustache.render(commitTemplateContent, {
+                    repo_url: repo_url,
+                    repo_name: repo_name,
+                    actor: actor,
                     commits: commits,
                     status: Utils.default(StatusMessage[status])
                 });
