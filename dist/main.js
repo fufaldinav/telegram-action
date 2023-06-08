@@ -81,7 +81,8 @@ function run() {
             const repo_url = `https://github.com/${repo_name}`;
             const branch = ref.split('/')[2];
             const branch_url = `${repo_url}/tree/${branch}`;
-            const commits_count = payload.commits.length;
+            const commits_filtered = payload.commits.filter(commit => !commit.message.startsWith('Merge branch'));
+            const commits_count = commits_filtered.length;
             //initialize message
             let message = null;
             //elaborate event
@@ -89,7 +90,7 @@ function run() {
                 case "push":
                     Utils_1.default.dump(payload);
                     //get commits
-                    let commits = payload.commits.map(commit => ({
+                    let commits = commits_filtered.map(commit => ({
                         commit_url: `${repo_url}/commit/${commit.id}`,
                         commit_sha: Utils_1.default.value(() => {
                             if (commit.id.length > 7) {
@@ -153,6 +154,7 @@ function run() {
             }
             else {
                 Utils_1.default.dump(error);
+                // @ts-ignore
                 core.setFailed(error.message);
             }
         }

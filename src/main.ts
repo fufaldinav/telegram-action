@@ -141,6 +141,7 @@ async function run(): Promise<void> {
             core.warning("No commits found.");
         } else {
             Utils.dump(error);
+            // @ts-ignore
             core.setFailed(error.message);
         }
     }
