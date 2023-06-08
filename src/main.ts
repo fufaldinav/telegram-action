@@ -55,7 +55,8 @@ async function run(): Promise<void> {
         const branch = ref.split('/')[2];
         const branch_url = `${repo_url}/tree/${branch}`
 
-        const commits_count = payload.commits.length;
+        const commits_filtered = payload.commits.filter(commit => !commit.message.startsWith('Merge branch'))
+        const commits_count = commits_filtered.length;
 
         //initialize message
         let message: string | null = null;
@@ -67,7 +68,7 @@ async function run(): Promise<void> {
                 Utils.dump(payload);
 
                 //get commits
-                let commits = payload.commits.map(commit => ({
+                let commits = commits_filtered.map(commit => ({
                     commit_url: `${repo_url}/commit/${commit.id}`,
                     commit_sha: Utils.value(() => {
                         if (commit.id.length > 7) {
